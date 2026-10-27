@@ -1,0 +1,36 @@
+# Generated build directories
+build/
+db/
+incremental_db/
+output_files/
+
+# Vivado generated directories
+.Xil/
+*.cache/
+*.gen/
+*.hw/
+*.ip_user_files/
+*.runs/
+*.sim/
+
+# Questa / ModelSim generated files
+work/
+rtl_work/
+gate_work/
+*.wlf
+transcript
+vsim_stacktrace.vstf
+
+# Tool logs and journals
+*.log
+*.jou
+*.str
+*.bak
+*.bak[0-9]*
+
+# Editor and OS files
+*~
+.DS_Store
+
+# Original local practicum project
+/EL3011_1_20261028_13224001/

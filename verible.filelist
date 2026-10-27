@@ -1,0 +1,4 @@
+rtl/common/mux2_to_1_rv32i.sv
+rtl/common/pc_4_adder_rv32i.sv
+tb/tb_mux2_to_1_rv32i.sv
+tb/tb_pc_4_adder_rv32i.sv
