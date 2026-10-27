@@ -11,9 +11,9 @@
 // Deskripsi     : Implementasi program counter 32-bit
 
 module pc_rv32i (
-    input logic clock,
-    input logic reset,  //< Active-high synchronous
-    input logic [31:0] PC_in,
+    input wire logic clock,
+    input wire logic reset,  //< Active-high synchronous
+    input wire logic [31:0] PC_in,
     output logic [31:0] PC_out
 );
 
