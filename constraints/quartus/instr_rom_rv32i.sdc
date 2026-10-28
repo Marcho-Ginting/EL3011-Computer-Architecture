@@ -1,10 +1,12 @@
-# Virtual reference clock: 100 MHz
-create_clock -name virtual_clk -period 10.000
+create_clock -name clock -period 10.000 [get_ports {clock}]
 
-# Inputs arrive at the reference clock edge
-set_input_delay -clock virtual_clk -max 0.000 [all_inputs]
-set_input_delay -clock virtual_clk -min 0.000 [all_inputs]
+# ADDR is a 32-bit bus: constrain every bit.
+set_input_delay -clock clock -max 0.000 [get_ports {ADDR[*]}]
+set_input_delay -clock clock -min 0.000 [get_ports {ADDR[*]}]
 
-# Outputs have no external delay budget
-set_output_delay -clock virtual_clk -max 0.000 [all_outputs]
-set_output_delay -clock virtual_clk -min 0.000 [all_outputs]
+# INSTR is a 32-bit bus: constrain every bit.
+set_output_delay -clock clock -max 0.000 [get_ports {INSTR[*]}]
+set_output_delay -clock clock -min 0.000 [get_ports {INSTR[*]}]
+
+# Let TimeQuest derive clock uncertainty for this clock.
+derive_clock_uncertainty
