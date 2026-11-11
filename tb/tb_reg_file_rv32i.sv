@@ -35,9 +35,35 @@ module tb_reg_file_rv32i;
 
   // Ten-nanosecond period
   initial begin
-    clock = 1'b0;
-    forever #5 clock = ~clock;
-  end
+  ADDR  = 32'h0000_0000;
+  reset = 1'b0;
+
+  // Allow Xilinx global startup reset and the timing netlist to settle.
+  #120;
+
+  // Create an explicit reset rising edge after startup.
+  reset = 1'b1;
+
+  // Wait two clock edges before checking the delayed implementation.
+  @(posedge clock);
+  @(posedge clock);
+  #1;
+
+  assert (INSTR === 32'h0000_0013)
+    else $fatal(1, "FAIL: reset did not produce RV32I NOP");
+
+  reset = 1'b0;
+
+  check_instruction(32'h0000_0000, 32'h0010_0293);
+  check_instruction(32'h0000_0004, 32'h0000_0313);
+  check_instruction(32'h0000_0008, 32'h00A0_0393);
+  check_instruction(32'h0000_0014, 32'h0053_0333);
+  check_instruction(32'h0000_001C, 32'h0000_0513);
+  check_instruction(32'h0000_0020, 32'h0000_0013);
+
+  $display("PASS: all instruction-ROM checks succeeded.");
+  $finish;
+end
 
   task automatic write_register(input logic [4:0] address, input logic [31:0] data);
     begin
@@ -49,26 +75,29 @@ module tb_reg_file_rv32i;
     end
   endtask
 
-  task automatic check_reads(input logic [4:0] address_1, input logic [31:0] expected_1,
-                             input logic [4:0] address_2, input logic [31:0] expected_2);
-    begin
-      rs1_addr = address_1;
-      rs2_addr = address_2;
+  task automatic check_instruction (
+    input logic [31:0] address,
+    input logic [31:0] expected
+);
+  begin
+    ADDR = address;
 
-      @(negedge clock);
-      #1;
+    // First rising edge captures the selected ROM word.
+    @(posedge clock);
 
-      if (rs1 !== expected_1) begin
-        $error("FAIL: rs1 address x%0d, actual = %h, expected = %h", address_1, rs1, expected_1);
-        failed = 1'b1;
-      end
+    // Wait one complete cycle. The output from the first capture
+    // has enough time to propagate through the implemented design.
+    @(posedge clock);
+    #1;
 
-      if (rs2 !== expected_2) begin
-        $error("FAIL: rs2 address x%0d, actual = %h, expected = %h", address_2, rs2, expected_2);
-        failed = 1'b1;
-      end
-    end
-  endtask
+    assert (INSTR === expected)
+      else $fatal(
+          1,
+          "FAIL: ADDR = %h, INSTR = %h, expected = %h",
+          address, INSTR, expected
+      );
+  end
+endtask
 
   initial begin
     cu_rdwrite = 1'b0;
