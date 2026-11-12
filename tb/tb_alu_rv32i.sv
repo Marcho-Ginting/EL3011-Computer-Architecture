@@ -56,9 +56,9 @@ module tb_alu_rv32i;
 
       2'b10: begin  // Shifter
         case (cu_shiftype)
-          2'b00:   expected = in1 << in2[4:0];
-          2'b01:   expected = in1 >> in2[4:0];
-          2'b10:   expected = signed_in1 >>> in2[4:0];
+          2'b00:   expected = in1 << in2[4:0];  // sll
+          2'b01:   expected = in1 >> in2[4:0];  // srl
+          2'b10:   expected = signed_in1 >>> in2[4:0];  //sra
           default: expected = 32'b0;
         endcase
       end
@@ -88,7 +88,7 @@ module tb_alu_rv32i;
   endtask
 
   initial begin
-    values[0] = 32'h0000_0000;
+    values[0] = 32'h0000_000C;
     values[1] = 32'h0000_0001;
     values[2] = 32'h0000_0002;
     values[3] = 32'h0000_001F;  // shift amount 31

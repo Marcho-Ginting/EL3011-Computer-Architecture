@@ -30,7 +30,6 @@ module brancher_rv32i (
         3'b001: PC_in = (in1 != in2) ? PC_branch : PC_new;  // BNE
         3'b010: PC_in = (in1 < in2) ? PC_branch : PC_new;  // BLT
         3'b011: PC_in = (in1 >= in2) ? PC_branch : PC_new;  // BGE
-
         3'b100: PC_in = ($unsigned(in1) < $unsigned(in2)) ? PC_branch : PC_new;  // BLTU
         3'b101: PC_in = ($unsigned(in1) >= $unsigned(in2)) ? PC_branch : PC_new;  // BGEU
 

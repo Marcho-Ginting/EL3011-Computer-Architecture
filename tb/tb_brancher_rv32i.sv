@@ -69,19 +69,17 @@ module tb_brancher_rv32i;
     PC_new    = 32'h0000_0100;
     PC_branch = 32'h0000_0200;
 
-    // Values chosen to test equality, signed boundaries, and unsigned range.
-    values[0] = 32'h0000_0000; // 0
-    values[1] = 32'h0000_0001; // 1
-    values[2] = 32'h0000_0002; // 2
-    values[3] = 32'h7FFF_FFFF; // largest signed positive
-    values[4] = 32'h8000_0000; // most negative signed
+    values[0] = 32'h0000_0000;
+    values[1] = 32'h0000_0001;
+    values[2] = 32'h0000_0002;
+    values[3] = 32'h7FFF_FFFF;
+    values[4] = 32'h8000_0000;
     values[5] = 32'h8000_0001;
     values[6] = 32'hFFFF_FFFE;
-    values[7] = 32'hFFFF_FFFF; // -1 signed, largest unsigned
+    values[7] = 32'hFFFF_FFFF;
     values[8] = 32'h5555_AAAA;
     values[9] = 32'hAAAA_5555;
 
-    // For each pair, exercise all six branch types.
     for (int i = 0; i < 10; i++) begin
       for (int j = 0; j < 10; j++) begin
         in1 = values[i];
@@ -95,7 +93,6 @@ module tb_brancher_rv32i;
       end
     end
 
-    // Branch disabled must always select the sequential PC.
     in1 = 32'hFFFF_FFFF;
     in2 = 32'h0000_0001;
     cu_branch = 1'b0;
@@ -104,7 +101,6 @@ module tb_brancher_rv32i;
       check_result("branch disabled");
     end
 
-    // Invalid branch encodings must fall back to PC_new.
     cu_branch = 1'b1;
     cu_branchtype = 3'b110;
     check_result("invalid branch type 110");
